@@ -12,14 +12,27 @@ const runner            = require('./test-runner');
 const app = express();
 
 app.use('/public', express.static(process.cwd() + '/public'));
+ 
+
+// Middlewares
+app.use(helmet({
+  frameguard: {        
+    action: 'deny'
+  },
+  // Set only allowing scripts and css from server self. 
+  contentSecurityPolicy: {    
+    directives: {
+      scriptSrc: ["'self'"], 
+      styleSrc: ["'self'"],
+    }
+  }
+  
+})); 
+
+
+
 
 app.use(cors({origin: '*'})); //For FCC testing purposes only
-
-app.use(helmet.hidePoweredBy()); // So hackers can't exploit express/node vulnerabilities when using Express. (removes the header) 
-app.use(helmet.frameguard({action: "deny"})); // Protect against click jacking. 
-app.use(helmet.xssFilter()); // XSS HTTP basic protection filter. 
-app.use(helmet.noSniff());  // Nosniff, block content-type sniffing. 
-app.use(helmet.ieNoOpen()); // Avoid untrusted.
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
