@@ -21,6 +21,7 @@ module.exports = function (app) {
 
       res.json(stockData); 
       console.log(stockData);
+      
        
       
 
